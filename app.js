@@ -10,6 +10,7 @@ seedDB();
 mongoose.connect("mongodb://localhost:27018/yelp_camp", { useUnifiedTopology: true, useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(express.static(__dirname+"/public"));
 
 app.get("/", function(req, res){
     res.render("landing");
