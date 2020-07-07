@@ -2,6 +2,7 @@ var express = require('express'),
     router = express.Router(),
     Campground = require('../models/campground')
 
+
 //INDEX - show all campgrounds
 router.get("/", function(req, res){
     // Get all campgrounds from DB
@@ -55,6 +56,39 @@ router.get("/:id", function(req, res){
         }
     })
 })
+
+router.get("/:id/edit",function(req,res){
+    Campground.findById(req.params.id,function(err,foundCampground){
+        if(err){
+            res.redirect("/campgrounds");
+        } else{
+            res.render("campgrounds/edit",{campground: foundCampground});
+        }
+    })
+})
+
+router.put("/:id",function(req,res){
+    Campground.findByIdAndUpdate(req.params.id,req.body.campground,function(err,updatedCampground){
+        if(err){
+            res.redirect("/campgrounds");
+        } else{
+            res.redirect("/campgrounds/"+req.params.id);
+        }
+    })
+})
+
+//Destroy Campground route
+router.delete("/:id",function(req,res){
+    Campground.findByIdAndDelete(req.params.id,function(err){
+        if(err){
+            console.log(err);
+            res.redirect("/campgrounds");
+        } else{
+            res.redirect("/campgrounds");
+        }
+    })
+})
+
 
 function isLoggedIn(req,res,next){
     if(req.isAuthenticated()){

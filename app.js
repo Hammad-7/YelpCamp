@@ -8,6 +8,7 @@ var Comment = require("./models/comment");
 var passport = require('passport')
 var localStrategy = require('passport-local')
 var User = require('./models/user')
+var methodOverride = require('method-override')
 
 
 var commentRoutes = require('./routes/comments'),
@@ -19,6 +20,7 @@ mongoose.connect("mongodb://localhost:27018/yelp_camp", { useUnifiedTopology: tr
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname+"/public"));
+app.use(methodOverride("_method"));
 
 //Passport configuration
 app.use(require("express-session")({
