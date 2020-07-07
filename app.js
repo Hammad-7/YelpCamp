@@ -5,6 +5,10 @@ var mongoose = require('mongoose')
 var Campground = require('./models/campground')
 var seedDB = require('./seeds');
 var Comment = require("./models/comment");
+var passport = require('passport')
+var localStrategy = require('passport-local')
+var user = require('./models/user')
+
 
 seedDB();
 mongoose.connect("mongodb://localhost:27018/yelp_camp", { useUnifiedTopology: true, useNewUrlParser: true });
