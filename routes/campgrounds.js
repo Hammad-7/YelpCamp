@@ -27,7 +27,7 @@ router.post("/", function(req, res){
             console.log(err);
         } else {
             //redirect back to campgrounds page
-            res.redirect("campgrounds/campgrounds");
+            res.redirect("/campgrounds");
         }
     });
 });
