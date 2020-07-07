@@ -7,7 +7,7 @@ var seedDB = require('./seeds');
 var Comment = require("./models/comment");
 var passport = require('passport')
 var localStrategy = require('passport-local')
-var user = require('./models/user')
+var User = require('./models/user')
 
 
 seedDB();
@@ -15,6 +15,19 @@ mongoose.connect("mongodb://localhost:27018/yelp_camp", { useUnifiedTopology: tr
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname+"/public"));
+
+//Passport configuration
+app.use(require("express-session")({
+    secret:"Once again Rusty wins cutest dog!",
+    resave:false,
+    saveUninitialized:false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 app.get("/", function(req, res){
     res.render("landing");
@@ -101,6 +114,29 @@ app.post("/campgrounds/:id/comments",function(req,res){
         
     })
 })
+
+
+//====================
+//  AUTH ROUTES
+// ===================
+app.get("/register",function(req,res){
+    res.render("register");
+})
+
+app.post("/register",function(req,res){
+    var newUser = new User({username: req.body.username});
+    User.register(newUser,req.body.password,function(err,user){
+        if(err){
+            console.log(err);
+            res.redirect("/register")
+        }
+        passport.authenticate("local")(req,res,function(){
+            res.redirect("/campgrounds");
+        })
+    })
+})
+
+
 
 app.listen(3000,function(){
     console.log("Server has started!");
